@@ -1,0 +1,23 @@
+linters-settings:
+  gocritic:
+    enabled: true
+  revive:
+    enabled: true
+    config: .gorevive.yml
+
+linters:
+  enable-all: true
+  disable: [whitespace]
+
+linters-versions:
+  deadcode: v1.1.0
+  unused: v1.1.0
+  staticcheck: v2021.1.1
+  goconst: v1.5.0
+  gosimple: v1.3.0
+  unconvert: v0.2.0
+  gocritic: v0.3.0
+  revive: v1.0.1
+  interfacer: v1.3.0
+  maligned: v1.0.1
+  errcheck: v1.3.0
