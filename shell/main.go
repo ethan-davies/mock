@@ -30,17 +30,21 @@ func main() {
 	fmt.Println("Mock Shell v1.0.0")
 
 	for {
-		usr, _ := user.Current()
+        // Get username and hostname
+        user, _ := user.Current()
+        hostname, _ := os.Hostname()
 		currentDir, _ := os.Getwd()
 
-		username := usr.Username
-		hostname, _ := os.Hostname()
+        // Format the prompt
+        prompt := fmt.Sprintf("%s@%s:%s # ", user.Username, hostname, currentDir)
 
-		fmt.Printf("%s@%s:%s $ ", username, hostname, currentDir)
+        // Print the prompt
+        fmt.Print(prompt)
 
-		reader := bufio.NewReader(os.Stdin)
-		input, _ := reader.ReadString('\n')
-		input = strings.TrimSpace(input)
+        // Read input and process commands
+        reader := bufio.NewReader(os.Stdin)
+        input, _ := reader.ReadString('\n')
+        input = strings.TrimSpace(input)
 
 		if input == "exit" {
 			break
@@ -347,6 +351,7 @@ func pingHost(host string) {
 	fmt.Printf("Approximate round trip times:\n")
 	fmt.Printf("  Minimum = %s, Maximum = %s, Average = %s\n",
 		stats.MinRtt.String(), stats.MaxRtt.String(), stats.AvgRtt.String())
+
 }
 
 func removeFileOrDirectory(path string) error {
