@@ -1,0 +1,55 @@
+mock-shell/
+├── cmd/
+│   ├── cd/
+│   │   ├── cd.go
+│   │   └── cd_test.go
+│   ├── clear/
+│   │   ├── clear.go
+│   │   └── clear_test.go
+│   ├── cp/
+│   │   ├── cp.go
+│   │   └── cp_test.go
+│   ├── echo/
+│   │   ├── echo.go
+│   │   └── echo_test.go
+│   ├── exit/
+│   │   ├── exit.go
+│   │   └── exit_test.go
+│   ├── ls/
+│   │   ├── ls.go
+│   │   └── ls_test.go
+│   ├── mkdir/
+│   │   ├── mkdir.go
+│   │   └── mkdir_test.go
+│   ├── mv/
+│   │   ├── mv.go
+│   │   └── mv_test.go
+│   ├── ping/
+│   │   ├── ping.go
+│   │   └── ping_test.go
+│   ├── pwd/
+│   │   ├── pwd.go
+│   │   └── pwd_test.go
+│   ├── rm/
+│   │   ├── rm.go
+│   │   └── rm_test.go
+│   ├── rmdir/
+│   │   ├── rmdir.go
+│   │   └── rmdir_test.go
+│   ├── time/
+│   │   ├── time.go
+│   │   └── time_test.go
+│   ├── whoami/
+│   │   ├── whoami.go
+│   │   └── whoami_test.go
+├── internal/
+│   ├── shell/
+│   │   ├── main.go
+│   │   ├── shell_test.go
+│   ├── utils/
+│   │   ├── path.go
+│   │   ├── path_test.go
+│   │   ├── diskusage.go
+│   │   ├── diskusage_test.go
+├── .gitignore
+├── README.md
