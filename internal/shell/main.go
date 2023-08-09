@@ -23,32 +23,34 @@ import (
 	"mock-shell/cmd/whoami"
 	"os"
 	"os/user"
+	"path/filepath"
 	"strings"
 )
 
-func main() {
-	fmt.Println("Mock Shell v1.0.0")
+func getUsername() string {
+	user, _ := user.Current()
+	parts := strings.Split(user.Username, "\\")
+	return parts[1] + "@" + parts[0]
+}
 
+
+func main() {
 	for {
-		// Get username and hostname
-		user, _ := user.Current()
-		hostname, _ := os.Hostname()
 		currentDir, _ := os.Getwd()
 
-		// Format the prompt
-		prompt := fmt.Sprintf("%s@%s:%s $ ", user.Username, hostname, currentDir)
-
-		// Print the prompt
+		// Get the path relative to the root directory
+		rootDir, _ := filepath.Abs("/")
+		relPath, _ := filepath.Rel(rootDir, currentDir)
+		relPath = strings.Replace(relPath, "\\", "/", -1)
+		
+		// Construct the prompt directly using getUsername()
+		prompt := getUsername() + ":" + relPath + " $ "
+		
 		fmt.Print(prompt)
 
-		// Read input and process commands
 		reader := bufio.NewReader(os.Stdin)
 		input, _ := reader.ReadString('\n')
 		input = strings.TrimSpace(input)
-
-		if input == "exit" {
-			break
-		}
 
 		// Process the command
 		processCommand(input)
