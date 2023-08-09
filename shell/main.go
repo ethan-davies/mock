@@ -15,6 +15,7 @@ import (
 	"github.com/go-ping/ping"
 )
 
+
 func addToPathForShell(executables ...string) {
 	for _, exe := range executables {
 		path := os.Getenv("PATH")
@@ -23,11 +24,16 @@ func addToPathForShell(executables ...string) {
 	}
 }
 
+var validCommands = []string{
+	"cd", "ls", "dir", "clear", "cls", "help", "pwd",
+	"echo", "whoami", "af", "mkdir", "time", "du", "diskusage",
+	"ps", "exit", "rm", "rmdir", "ping", "cp", "mv",
+}
+
 func main() {
+
 	// Add paths to executables (if needed)
 	addToPathForShell("C:\\path\\to\\git\\bin", "C:\\path\\to\\docker", "/usr/local/bin") // Example paths
-
-	fmt.Println("Mock Shell v1.0.0")
 
 	for {
         // Get username and hostname
@@ -36,7 +42,7 @@ func main() {
 		currentDir, _ := os.Getwd()
 
         // Format the prompt
-        prompt := fmt.Sprintf("%s@%s:%s # ", user.Username, hostname, currentDir)
+        prompt := fmt.Sprintf("%s@%s:%s $ ", user.Username, hostname, currentDir)
 
         // Print the prompt
         fmt.Print(prompt)
@@ -53,7 +59,7 @@ func main() {
 	switch {
 	case strings.HasPrefix(input, "cd "):
 		if len(strings.TrimSpace(input[3:])) == 0 {
-			fmt.Println("Invalid arguments for 'cd'. Use the help command to see proper use.")
+			fmt.Println("Invalid arguments. Use the help command to see proper use.")
 		} else {
 			changeDirectory(strings.TrimSpace(input[3:]))
 		}
@@ -65,24 +71,27 @@ func main() {
 		showHelp()
 	case input == "pwd":
 		fmt.Println(currentDir)
+
 	case strings.HasPrefix(input, "echo "):
-		if len(strings.TrimSpace(input[5:])) == 0 {
-			fmt.Println("Invalid arguments for 'echo'. Use the help command to see proper use.")
+		args := strings.TrimSpace(input[5:])
+		if len(args) == 0 {
+			fmt.Println("Invalid arguments. Use the help command to see proper use.")
 		} else {
-			echoText(strings.TrimSpace(input[5:]))
+			echoText(args)
 		}
+
 	case input == "whoami":
 		whoAmI()
 	case strings.HasPrefix(input, "af "):
 		args := strings.Fields(input[3:])
 		if len(args) != 1 {
-			fmt.Println("Invalid arguments for 'af'. Use the help command to see proper use.")
+			fmt.Println("Invalid arguments. Use the help command to see proper use.")
 		} else {
 			createFile(args[0])
 		}
 	case strings.HasPrefix(input, "mkdir "):
 		if len(strings.TrimSpace(input[6:])) == 0 {
-			fmt.Println("Invalid arguments for 'mkdir'. Use the help command to see proper use.")
+			fmt.Println("Invalid arguments. Use the help command to see proper use.")
 		} else {
 			createDirectory(strings.TrimSpace(input[6:]))
 		}
@@ -94,7 +103,7 @@ func main() {
 		showProcesses()
 	case strings.HasPrefix(input, "rm "):
 		if len(strings.TrimSpace(input[3:])) == 0 {
-			fmt.Println("Invalid arguments for 'rm'. Use the help command to see proper use.")
+			fmt.Println("Invalid arguments. Use the help command to see proper use.")
 		} else {
 			args := strings.TrimSpace(input[3:])
 			err := removeFileOrDirectory(args)
@@ -104,7 +113,7 @@ func main() {
 		}
 	case strings.HasPrefix(input, "rmdir "):
 		if len(strings.TrimSpace(input[6:])) == 0 {
-			fmt.Println("Invalid arguments for 'rmdir'. Use the help command to see proper use.")
+			fmt.Println("Invalid arguments. Use the help command to see proper use.")
 		} else {
 			dir := strings.TrimSpace(input[6:])
 			err := removeDirectory(dir)
@@ -117,10 +126,11 @@ func main() {
 	case strings.HasPrefix(input, "ping "):
 		host := strings.TrimSpace(input[5:])
 		pingHost(host)
+
 	case strings.HasPrefix(input, "cp "):
-		args := strings.SplitN(strings.TrimSpace(input[3:]), " ", 2)
+		args := strings.Fields(strings.TrimSpace(input[3:]))
 		if len(args) != 2 {
-			fmt.Println("Usage: cp <source> <destination>")
+			fmt.Println("Invalid arguments. Use the help command to see proper use.")
 		} else {
 			err := copyFile(args[0], args[1])
 			if err != nil {
@@ -129,6 +139,10 @@ func main() {
 				fmt.Println("File copied successfully")
 			}
 		}
+
+
+
+
 	case strings.HasPrefix(input, "mv "):
 		args := strings.SplitN(strings.TrimSpace(input[3:]), " ", 2)
 		if len(args) != 2 {
@@ -156,11 +170,25 @@ func runCommand(input string) {
 		cmd.Stderr = os.Stderr
 		err := cmd.Run()
 		if err != nil {
-			fmt.Println("Command not found:", input)
+			fmt.Println("DEBUG: input:", input)
+			if contains(validCommands, input) {
+				fmt.Println("Invalid arguments. Use the help command to see proper use.")
+			} else {
+				fmt.Println("Command not found:", input)
+			}
 		}
 	} else {
 		fmt.Println("Command not found:", input)
 	}
+}
+
+func contains(list []string, target string) bool {
+    for _, item := range list {
+        if item == target {
+            return true
+        }
+    }
+    return false
 }
 
 func changeDirectory(dir string) {
@@ -209,10 +237,6 @@ func showHelp() {
 	fmt.Println("du or diskusage  Display disk usage for the current directory")
 	fmt.Println("ps               Display process status")
 	fmt.Println("exit             Exit the shell")
-}
-
-func invalidArguments(command string) {
-	fmt.Printf("Invalid arguments for '%s'. Use the help command to see proper use.\n", command)
 }
 
 func echoText(text string) {
