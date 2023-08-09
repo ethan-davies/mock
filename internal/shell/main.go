@@ -4,6 +4,7 @@ import (
 	"bufio"
 	"fmt"
 	"mock-shell/cmd/af"
+	"mock-shell/cmd/browse"
 	"mock-shell/cmd/cd"
 	"mock-shell/cmd/clear"
 	"mock-shell/cmd/cp"
@@ -51,6 +52,10 @@ func main() {
 		reader := bufio.NewReader(os.Stdin)
 		input, _ := reader.ReadString('\n')
 		input = strings.TrimSpace(input)
+
+		if input == "" {
+			continue
+		}
 
 		// Process the command
 		processCommand(input)
@@ -124,6 +129,8 @@ func processCommand(input string) {
 		whoami.ExecuteWhoAmI()
 	case "help":
 		help.ExecuteHelp()
+	case "browse":
+		browse.ExecuteBrowse(args[1:])
 	default:
 		fmt.Printf("Command not found: %s. Use the help command to see proper use.\n", command)
 	}
