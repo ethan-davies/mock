@@ -11,8 +11,6 @@ import (
 	"runtime"
 	"strings"
 	"time"
-
-	"github.com/go-ping/ping"
 )
 
 
@@ -123,6 +121,7 @@ func main() {
 				fmt.Println("Directory removed:", dir)
 			}
 		}
+		
 	case strings.HasPrefix(input, "ping "):
 		host := strings.TrimSpace(input[5:])
 		pingHost(host)
@@ -170,7 +169,6 @@ func runCommand(input string) {
 		cmd.Stderr = os.Stderr
 		err := cmd.Run()
 		if err != nil {
-			fmt.Println("DEBUG: input:", input)
 			if contains(validCommands, input) {
 				fmt.Println("Invalid arguments. Use the help command to see proper use.")
 			} else {
@@ -358,24 +356,20 @@ func moveFile(srcPath, destPath string) error {
 }
 
 func pingHost(host string) {
-	pinger, err := ping.NewPinger(host)
-	if err != nil {
-		fmt.Println("Error creating pinger:", err)
-		return
+	var cmd *exec.Cmd
+
+	if runtime.GOOS == "windows" {
+		cmd = exec.Command("ping", host)
+	} else {
+		cmd = exec.Command("ping", "-c", "4", host) // For Linux and macOS
 	}
 
-	pinger.Count = 4 // Send 4 ICMP packets
-	pinger.Run()
-
-	stats := pinger.Statistics()
-	fmt.Printf("Ping statistics for %s:\n", host)
-	fmt.Printf("  Packets: Sent = %d, Received = %d, Lost = %d (%.2f%% loss)\n",
-		stats.PacketsSent, stats.PacketsRecv, stats.PacketsSent-stats.PacketsRecv,
-		(1 - float64(stats.PacketsRecv)/float64(stats.PacketsSent))*100)
-	fmt.Printf("Approximate round trip times:\n")
-	fmt.Printf("  Minimum = %s, Maximum = %s, Average = %s\n",
-		stats.MinRtt.String(), stats.MaxRtt.String(), stats.AvgRtt.String())
-
+	output, err := cmd.CombinedOutput()
+	if err != nil {
+		fmt.Println("Error running ping command:", err)
+		return
+	}
+	fmt.Println(string(output))
 }
 
 func removeFileOrDirectory(path string) error {
@@ -387,3 +381,6 @@ func removeDirectory(dir string) error {
 	err := os.RemoveAll(dir)
 	return err
 }
+
+
+// Make each command a different file in ./mock/shell/commands
