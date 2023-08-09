@@ -76,13 +76,13 @@ func processCommand(input string) {
 		if len(args) == 2 {
 			cd.ExecuteCD(args[1])
 		} else {
-			fmt.Println("Invalid arguments for 'cd'. Use the help command to see proper use.")
+			fmt.Println("Invalid arguments for 'cd'. Instead use 'cd <destination>' or use the help command to see proper use.")
 		}
 	case "clear", "cls":
 		clear.ExecuteClear()
 	case "cp":
 		if len(args) != 3 {
-			fmt.Println("Invalid arguments for 'cp'. Use the help command to see proper use.")
+			fmt.Println("Invalid arguments for 'cp'. Instead use 'cp <source> <destination>' or use the help command to see proper use.")
 		} else {
 			cp.ExecuteCP(args[1], args[2])
 		}
@@ -101,13 +101,13 @@ func processCommand(input string) {
 		mkdir.ExecuteMkdir(args)
 	case "mv":
 		if len(args) != 3 {
-			fmt.Println("Usage: mv <source> <destination>")
+			fmt.Println("Invalid arguments for 'mv'. Instead use 'mv <source> <destination>' or use the help command to see proper use.")
 		} else {
 			mv.ExecuteMV(args)
 		}
 	case "ping":
 		if len(args) != 2 {
-			fmt.Println("Usage: ping <host>")
+			fmt.Println("Invalid arguments for 'ping'. Instead use 'ping <host>' or use the help command to see proper use.")
 		} else {
 			ping.ExecutePing(args)
 		}
