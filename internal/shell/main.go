@@ -130,7 +130,14 @@ func processCommand(input string) {
 	case "help":
 		help.ExecuteHelp()
 	case "browse":
-		browse.ExecuteBrowse(args[1:])
+		if len(args) != 2 {
+			fmt.Println("Invalid arguments for 'browse'. Instead use 'browse <URL>' or use the help command to see proper use.")
+		} else {
+			err := browse.OpenURL(args[1])
+			if err != nil {
+				fmt.Println("Error opening URL:", err)
+			}
+		}
 	default:
 		fmt.Printf("Command not found: %s. Use the help command to see proper use.\n", command)
 	}

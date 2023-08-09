@@ -1,20 +1,21 @@
 package browse
 
 import (
-	"fmt"
+	"strings"
 
-	"github.com/skratchdot/open-golang/open"
+	"github.com/pkg/browser"
 )
 
-func ExecuteBrowse(args []string) {
-	if len(args) != 1 {
-		fmt.Println("Usage: browser <URL>")
-		return
+func OpenURL(url string) error {
+	// Prepend "http://" to the URL if it doesn't have a scheme
+	if !strings.HasPrefix(url, "http://") && !strings.HasPrefix(url, "https://") {
+		url = "http://" + url
 	}
 
-	url := args[0]
-	err := open.Run(url)
+	err := browser.OpenURL(url)
 	if err != nil {
-		fmt.Println("Error opening browser:", err)
+		return err
 	}
+
+	return nil
 }
