@@ -45,7 +45,7 @@ func main() {
 		relPath = strings.Replace(relPath, "\\", "/", -1)
 		
 		// Construct the prompt directly using getUsername()
-		prompt := getUsername() + ":" + relPath + " $ "
+		prompt := getUsername() + ":/" + relPath + " $ "
 		
 		fmt.Print(prompt)
 
@@ -105,12 +105,14 @@ func processCommand(input string) {
 		} else {
 			mv.ExecuteMV(args)
 		}
+
 	case "ping":
 		if len(args) != 2 {
 			fmt.Println("Invalid arguments for 'ping'. Instead use 'ping <host>' or use the help command to see proper use.")
 		} else {
-			ping.ExecutePing(args)
+			ping.ExecutePing(args[1])
 		}
+		
 	case "pwd": 
 		pwd.ExecutePwd(args)
 	case "rm":
