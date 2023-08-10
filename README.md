@@ -26,12 +26,14 @@ Mock Shell is a simple command-line shell program implemented in Go. It provides
 1. Clone this repository:
 
    ```bash
-   git clone https://github.com/ethan-davies/mock-shell.git
-   cd mock-shell
+   git clone https://github.com/ethan-davies/mock.git
+   cd mock
    ```
 
 ## Building
 For build to different platform use these: 
+
+go build ./internal/shell
 
 **Microsoft Powershell**
 ```bash
