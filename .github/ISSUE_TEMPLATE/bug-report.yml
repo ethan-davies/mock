@@ -1,6 +1,6 @@
 name: "Bug report"
 description: "For unintended behaviors"
-title: "[Bug]: "
+title: "Bug report: "
 labels: bug
 body:
   - type: checkboxes

@@ -1,6 +1,6 @@
 name: "Feature Request"
 description: "To propose an enhancement"
-title: "[Feature Request]: "
+title: "feat: "
 labels: enhancement
 body:
   - type: checkboxes
