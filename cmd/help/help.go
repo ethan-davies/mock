@@ -20,5 +20,5 @@ func ExecuteHelp() {
 	fmt.Println("du or diskusage  Display disk usage for the current directory")
 	fmt.Println("ps               Display process status")
 	fmt.Println("exit             Exit the shell")
-	fmt.Println("browser          Open a URL in the users prefered browser")
+	fmt.Println("browse           Open a URL in the users prefered browser")
 }
