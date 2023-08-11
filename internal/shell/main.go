@@ -4,6 +4,7 @@ import (
 	"bufio"
 	"fmt"
 	"mock-shell/cmd/af"
+	"mock-shell/cmd/aliases"
 	"mock-shell/cmd/browse"
 	"mock-shell/cmd/cd"
 	"mock-shell/cmd/clear"
@@ -28,6 +29,9 @@ import (
 	"strings"
 )
 
+var currentAliases map[string]string
+
+
 func getUsername() string {
 	user, _ := user.Current()
 	parts := strings.Split(user.Username, "\\")
@@ -36,6 +40,12 @@ func getUsername() string {
 
 
 func main() {
+	currentAliases, err := aliases.ExecuteLoadAliases()
+	if err != nil {
+		fmt.Println("Error loading aliases:", err)
+	}
+
+
 	for {
 		currentDir, _ := os.Getwd()
 
@@ -56,9 +66,21 @@ func main() {
 		if input == "" {
 			continue
 		}
+		
+		
+		if aliasedCommand, ok := currentAliases[strings.Fields(input)[0]]; ok {
+			fmt.Println("Alias found:", strings.Fields(input)[0], "=>", aliasedCommand)
+			input = aliasedCommand
+		}
 
 		// Process the command
 		processCommand(input)
+
+		err := aliases.SaveAliases(currentAliases)
+		if err != nil {
+			fmt.Println("Error saving aliases:", err)
+		}
+		
 	}
 }
 
@@ -88,14 +110,14 @@ func processCommand(input string) {
 		}
 	case "echo":
 		if len(args) >= 2 {
-			text := strings.Join(args[1:], " ")
+			text := strings.Join(remainingArgs, " ")
 			echo.ExecuteEcho(text)
 		} else {
 			fmt.Println("Invalid arguments for 'echo'. Instead use 'echo <text>' or use the help command to see proper use.")
 		}
 	case "exit":
 		exit.ExecuteExit()
-	case "ls", "dir":
+	case "ls":
 		ls.ExecuteLS(args)
 	case "mkdir":
 		mkdir.ExecuteMkdir(args)
@@ -116,17 +138,17 @@ func processCommand(input string) {
 	case "pwd": 
 		pwd.ExecutePwd(args)
 	case "rm":
-		rm.ExecuteRm(args[1:])
+		rm.ExecuteRm(remainingArgs)
 	case "rmdir":
-		rmdir.ExecuteRmdir(args[1:])
+		rmdir.ExecuteRmdir(remainingArgs)
 	case "time":
 		time.ExecuteTime()
-	case "du", "diskusage":
+	case "du":
 		du.ExecuteDU(remainingArgs)
 	case "ps":
 		ps.ExecuteProcessStatus()
 	case "af":
-		af.ExecuteCreateFile(args[1:])
+		af.ExecuteCreateFile(remainingArgs)
 	case "whoami":
 		whoami.ExecuteWhoAmI()
 	case "help":
